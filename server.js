@@ -45,7 +45,7 @@ async function getPoolData() {
     // Ожидаем появления нужных элементов
     await page.waitForSelector(".app-earn__content-table-cell-pool-name", {
       visible: true,
-      timeout: 60000,
+      timeout: 120000,
     });
 
     // Извлекаем текст из всех элементов с этим классом
