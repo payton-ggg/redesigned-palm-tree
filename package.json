@@ -2,10 +2,10 @@
   "name": "dedust-parser-server",
   "version": "1.0.0",
   "description": "An Express server for parsing DeDust and TonViewer data",
-  "main": "index.js",
+  "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "node index.js"
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
