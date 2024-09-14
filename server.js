@@ -1,9 +1,9 @@
 import express from "express";
-import puppeteer from "puppeteer";
+import { chromium } from "playwright"; // Импортируем Playwright
 import cors from "cors";
 
 const app = express();
-const port = 3000;
+const port = 3001;
 
 // Разрешаем CORS для клиентской части
 app.use(cors());
@@ -14,8 +14,8 @@ const tonViewerUrl =
 
 // Парсинг данных с сайта DeDust
 async function getPoolData() {
-  const browser = await puppeteer.launch({
-    headless: "new",
+  const browser = await chromium.launch({
+    headless: true,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
   const page = await browser.newPage();
@@ -23,13 +23,11 @@ async function getPoolData() {
   try {
     // Переход на страницу DeDust
     await page.goto(dedustUrl, {
-      waitUntil: "networkidle2",
+      waitUntil: "networkidle",
     });
 
     // Ожидаем появления нужных элементов
-    await page.waitForSelector(".app-earn__content-table-cell-pool-name", {
-      visible: true,
-    });
+    await page.waitForSelector(".app-earn__content-table-cell-pool-name");
 
     // Извлекаем текст из всех элементов с этим классом
     const poolNames = await page.$$eval(
@@ -60,19 +58,20 @@ async function getPoolData() {
 
 // Парсинг данных с сайта Tonview
 async function getElementData() {
-  const browser = await puppeteer.launch();
+  const browser = await chromium.launch({
+    headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
   const page = await browser.newPage();
 
   try {
     // Переход на страницу
     await page.goto(tonViewerUrl, {
-      waitUntil: "networkidle2",
+      waitUntil: "networkidle",
     });
 
     // Ожидание элемента, содержащего все классы
-    await page.waitForSelector(".bdtytpm.nygz236.t1g1t0q6.b1qs25iq.t1cmncij", {
-      visible: true,
-    });
+    await page.waitForSelector(".bdtytpm.nygz236.t1g1t0q6.b1qs25iq.t1cmncij");
 
     // Извлекаем текст элемента с указанными классами
     const elementData = await page.$eval(
@@ -112,5 +111,5 @@ app.get("/api/element-info", async (req, res) => {
 
 // Запуск сервера
 app.listen(port, () => {
-  console.log(`Сервер запущен на http://localhost:${port}`);
+  console.log(`Сервер запущен на http://localhost:${port}/api/pool-info`);
 });
