@@ -18,9 +18,8 @@ async function getPoolData() {
     headless: true,
     args: [
       "--no-sandbox",
-      "--disable-setuid-sandbox",
     ],
-    timeout: 60000 // Увеличение времени ожидания
+    timeout: 180000 // Увеличение времени ожидания
   });
   const page = await browser.newPage();
   await page.setRequestInterception(true);
@@ -38,15 +37,12 @@ async function getPoolData() {
     // Переход на страницу DeDust
     await page.goto(dedustUrl, {
       waitUntil: 'networkidle2', // Ждет, пока не завершатся все сетевые запросы
-      timeout: 90000 // Увеличение времени ожидания до 60 секунд
+      timeout: 180000 // Увеличение времени ожидания до 60 секунд
     });
 
 
     // Ожидаем появления нужных элементов
-    await page.waitForSelector(".app-earn__content-table-cell-pool-name", {
-      visible: true,
-      timeout: 120000,
-    });
+
 
     // Извлекаем текст из всех элементов с этим классом
     const poolNames = await page.$$eval(
