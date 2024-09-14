@@ -67,8 +67,10 @@ async function getElementData() {
   try {
     // Переход на страницу
     await page.goto(tonViewerUrl, {
-      waitUntil: "networkidle2",
+      waitUntil: "load",
+      timeout: 60000,
     });
+
 
     // Ожидание элемента, содержащего все классы
     await page.waitForSelector(".bdtytpm.nygz236.t1g1t0q6.b1qs25iq.t1cmncij", {
