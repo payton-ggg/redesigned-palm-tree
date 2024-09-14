@@ -67,7 +67,7 @@ async function getElementData() {
   try {
     // Переход на страницу
     await page.goto(tonViewerUrl, {
-      waitUntil: "load",
+      waitUntil: "domcontentloaded",
       timeout: 60000,
     });
 
