@@ -1,5 +1,5 @@
 import express from "express";
-import { chromium } from "playwright"; // Импортируем Playwright
+import puppeteer from "puppeteer";
 import cors from "cors";
 
 const app = express();
@@ -14,10 +14,7 @@ const tonViewerUrl =
 
 // Парсинг данных с сайта DeDust
 async function getPoolData() {
-  await chromium.downloadBrowserIfNeeded();
-  
-  const browser = await chromium.launch({
-    headless: true,
+  const browser = await puppeteer.launch({
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
   const page = await browser.newPage();
@@ -25,11 +22,13 @@ async function getPoolData() {
   try {
     // Переход на страницу DeDust
     await page.goto(dedustUrl, {
-      waitUntil: "networkidle",
+      waitUntil: "networkidle2",
     });
 
     // Ожидаем появления нужных элементов
-    await page.waitForSelector(".app-earn__content-table-cell-pool-name");
+    await page.waitForSelector(".app-earn__content-table-cell-pool-name", {
+      visible: true,
+    });
 
     // Извлекаем текст из всех элементов с этим классом
     const poolNames = await page.$$eval(
@@ -60,20 +59,19 @@ async function getPoolData() {
 
 // Парсинг данных с сайта Tonview
 async function getElementData() {
-  const browser = await chromium.launch({
-    headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-  });
+  const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
   try {
     // Переход на страницу
     await page.goto(tonViewerUrl, {
-      waitUntil: "networkidle",
+      waitUntil: "networkidle2",
     });
 
     // Ожидание элемента, содержащего все классы
-    await page.waitForSelector(".bdtytpm.nygz236.t1g1t0q6.b1qs25iq.t1cmncij");
+    await page.waitForSelector(".bdtytpm.nygz236.t1g1t0q6.b1qs25iq.t1cmncij", {
+      visible: true,
+    });
 
     // Извлекаем текст элемента с указанными классами
     const elementData = await page.$eval(
@@ -113,5 +111,5 @@ app.get("/api/element-info", async (req, res) => {
 
 // Запуск сервера
 app.listen(port, () => {
-  console.log(`Сервер запущен на http://localhost:${port}/api/pool-info`);
+  console.log(`Сервер запущен на http://localhost:${port}/api/element-info`);
 });
