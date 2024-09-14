@@ -14,6 +14,8 @@ const tonViewerUrl =
 
 // Парсинг данных с сайта DeDust
 async function getPoolData() {
+  await chromium.downloadBrowserIfNeeded();
+  
   const browser = await chromium.launch({
     headless: true,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
