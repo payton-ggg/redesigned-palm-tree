@@ -3,7 +3,7 @@ import puppeteer from "puppeteer";
 import cors from "cors";
 
 const app = express();
-const port = 5000;
+const port = 3000;
 
 // Разрешаем CORS для клиентской части
 app.use(cors());
