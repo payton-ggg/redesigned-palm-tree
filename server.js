@@ -17,7 +17,6 @@ async function getPoolData() {
   const browser = await puppeteer.launch({
     headless: true,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    dumpio: true
   });
   const page = await browser.newPage();
 
@@ -64,7 +63,6 @@ async function getElementData() {
   const browser = await puppeteer.launch({
     headless: true,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    dumpio: true
   });
   const page = await browser.newPage();
 
