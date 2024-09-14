@@ -23,6 +23,16 @@ async function getPoolData() {
     timeout: 60000 // Увеличение времени ожидания
   });
   const page = await browser.newPage();
+  await page.setRequestInterception(true);
+  page.on('request', (req) => {
+    const resourceType = req.resourceType();
+    if (['image', 'stylesheet', 'font'].includes(resourceType)) {
+      req.abort();
+    } else {
+      req.continue();
+    }
+  });
+  
 
   try {
     // Переход на страницу DeDust
@@ -76,6 +86,16 @@ async function getElementData() {
     timeout: 60000 // Увеличение времени ожидания
   });
   const page = await browser.newPage();
+  await page.setRequestInterception(true);
+  page.on('request', (req) => {
+    const resourceType = req.resourceType();
+    if (['image', 'stylesheet', 'font'].includes(resourceType)) {
+      req.abort();
+    } else {
+      req.continue();
+    }
+  });
+
 
   try {
     // Переход на страницу
