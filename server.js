@@ -16,7 +16,14 @@ const tonViewerUrl =
 async function getPoolData() {
   const browser = await puppeteer.launch({
     headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage", // Использует диск вместо /dev/shm для shared memory
+      "--disable-gpu", // Отключает использование GPU
+      "--disable-software-rasterizer" // Полностью отключает графические ускорители
+    ],
+    timeout: 60000 // Увеличение времени ожидания
   });
   const page = await browser.newPage();
 
@@ -62,7 +69,14 @@ async function getPoolData() {
 async function getElementData() {
   const browser = await puppeteer.launch({
     headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage", // Использует диск вместо /dev/shm для shared memory
+      "--disable-gpu", // Отключает использование GPU
+      "--disable-software-rasterizer" // Полностью отключает графические ускорители
+    ],
+    timeout: 60000 // Увеличение времени ожидания
   });
   const page = await browser.newPage();
 
