@@ -15,7 +15,9 @@ const tonViewerUrl =
 // Парсинг данных с сайта DeDust
 async function getPoolData() {
   const browser = await puppeteer.launch({
+    headless: true,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    dumpio: true
   });
   const page = await browser.newPage();
 
@@ -61,7 +63,11 @@ async function getPoolData() {
 
 // Парсинг данных с сайта Tonview
 async function getElementData() {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    dumpio: true
+  });
   const page = await browser.newPage();
 
   try {
