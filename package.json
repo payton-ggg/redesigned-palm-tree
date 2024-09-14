@@ -6,7 +6,6 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "postinstall": "node node_modules/puppeteer/install.js"
   },
   "keywords": [],
   "author": "",
