@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "An Express server for parsing DeDust and TonViewer data",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "node index.js"
   },
