@@ -7,9 +7,6 @@
   "scripts": {
     "start": "node server.js",
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "express": "^4.18.1",
     "puppeteer": "^19.11.1",
