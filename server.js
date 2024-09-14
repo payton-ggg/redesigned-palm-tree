@@ -37,7 +37,7 @@ async function getPoolData() {
   try {
     // Переход на страницу DeDust
     await page.goto(dedustUrl, {
-      waitUntil: 'load', // Ждет, пока не завершатся все сетевые запросы
+      waitUntil: 'networkidle2', // Ждет, пока не завершатся все сетевые запросы
       timeout: 90000 // Увеличение времени ожидания до 60 секунд
     });
 
@@ -100,7 +100,7 @@ async function getElementData() {
   try {
     // Переход на страницу
     await page.goto(tonViewerUrl, {
-      waitUntil: 'load', // Ждет, пока не завершатся все сетевые запросы
+      waitUntil: 'networkidle2', // Ждет, пока не завершатся все сетевые запросы
       timeout: 90000 // Увеличение времени ожидания до 60 секунд
     });
 
