@@ -23,15 +23,13 @@ async function getPoolData() {
 
   try {
     // Переход на страницу DeDust
-    await page.goto(dedustUrl, {
-      waitUntil: "domcontentloaded",
-      timeout: 60000,
-    });
+    await page.goto(dedustUrl);
 
 
     // Ожидаем появления нужных элементов
     await page.waitForSelector(".app-earn__content-table-cell-pool-name", {
       visible: true,
+      timeout: 60000,
     });
 
     // Извлекаем текст из всех элементов с этим классом
@@ -72,15 +70,13 @@ async function getElementData() {
 
   try {
     // Переход на страницу
-    await page.goto(tonViewerUrl, {
-      waitUntil: "domcontentloaded",
-      timeout: 60000,
-    });
+    await page.goto(tonViewerUrl);
 
 
     // Ожидание элемента, содержащего все классы
     await page.waitForSelector(".bdtytpm.nygz236.t1g1t0q6.b1qs25iq.t1cmncij", {
       visible: true,
+      timeout: 60000,
     });
 
     // Извлекаем текст элемента с указанными классами
