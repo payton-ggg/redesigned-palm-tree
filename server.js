@@ -19,9 +19,6 @@ async function getPoolData() {
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage", // Использует диск вместо /dev/shm для shared memory
-      "--disable-gpu", // Отключает использование GPU
-      "--disable-software-rasterizer" // Полностью отключает графические ускорители
     ],
     timeout: 60000 // Увеличение времени ожидания
   });
@@ -75,9 +72,6 @@ async function getElementData() {
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage", // Использует диск вместо /dev/shm для shared memory
-      "--disable-gpu", // Отключает использование GPU
-      "--disable-software-rasterizer" // Полностью отключает графические ускорители
     ],
     timeout: 60000 // Увеличение времени ожидания
   });
