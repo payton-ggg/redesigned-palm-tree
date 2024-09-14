@@ -42,7 +42,7 @@ async function getPoolData() {
     await page.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3");
 
     // Ожидаем появления нужных элементов
-    await page.waitForSelector(".app-earn__content-table-cell-pool-name", {
+    await page.waitForSelector(".app-earn__content-table-cell-pool-text", {
       visible: true,
       timeout: 180000,
     });
