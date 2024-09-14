@@ -22,8 +22,10 @@ async function getPoolData() {
   try {
     // Переход на страницу DeDust
     await page.goto(dedustUrl, {
-      waitUntil: "networkidle2",
+      waitUntil: "domcontentloaded",
+      timeout: 60000,
     });
+
 
     // Ожидаем появления нужных элементов
     await page.waitForSelector(".app-earn__content-table-cell-pool-name", {
