@@ -36,6 +36,7 @@ async function getPoolData() {
       waitUntil: 'networkidle2', // Ждет, пока не завершатся все сетевые запросы
       timeout: 180000 // Увеличение времени ожидания до 60 секунд
     });
+    console.log('Страница загружена');
 
     await page.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3");
 
