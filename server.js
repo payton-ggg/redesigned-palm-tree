@@ -5,107 +5,84 @@ import cors from "cors";
 const app = express();
 const port = 3001;
 
-// Разрешаем CORS для клиентской части
-app.use(cors());
+app.use(cors()); // Разрешаем CORS
 
 const dedustUrl = "https://app.dedust.io/pools?search=holy";
 const tonViewerUrl =
   "https://tonviewer.com/EQAWVv2x6txoc5Nel9CltbfYSBMOOf0R9sb7GnqY-4ncmjcQ";
-const browser = await puppeteer.launch({
-  headless: true,
-  args: [
-    "--no-sandbox",
-    "--disable-setuid-sandbox",
-    "--disable-dev-shm-usage",
-    "--disable-gpu",
-  ],
-  timeout: 180000,
-});
 
-// Парсинг данных с сайта DeDust
+// Функция для парсинга данных с сайта DeDust
 async function getPoolData() {
-  const page = await browser.newPage({
-    waitUntil: "networkidle2", // Ждет, пока не завершатся все сетевые запросы
-    timeout: 90000, // Увеличение времени ожидания до 60 секунд
-  });
-
-  try {
-    // Переход на страницу DeDust
-    await page.goto(dedustUrl);
-    console.log("Страница загружена");
-
-    await page.setUserAgent(
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
-    );
-
-    // Ожидаем появления нужных элементов
-    await page.waitForSelector(".app-earn__content-table-cell-pool-name", {
-      visible: true,
-    });
-
-    // Извлекаем текст из всех элементов с этим классом
-    const poolNames = await page.$$eval(
-      ".app-earn__content-table-cell-pool-name",
-      (elements) => elements.map((el) => el.innerText.trim())
-    );
-
-    const poolTexts = await page.$$eval(
-      ".app-earn__content-table-cell-text",
-      (elements) => elements.map((el) => el.innerText.trim())
-    );
-
-    const poolHref = await page.$$eval(
-      ".app-earn__content-table a",
-      (elements) => elements.map((el) => el.href) // Извлечение всех ссылок
-    );
-
-    // Закрываем браузер
-    await browser.close();
-
-    return { poolNames, poolTexts, poolHref };
-  } catch (error) {
-    console.error("Ошибка при парсинге:", error);
-    await browser.close();
-    return null;
-  }
-}
-
-// Парсинг данных с сайта Tonview
-async function getElementData() {
   const browser = await puppeteer.launch({
     headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    timeout: 60000, // Увеличение времени ожидания
+    args: ["--no-sandbox", "--disable-setuid-sandbox"], // Безопасные параметры для серверов
   });
   const page = await browser.newPage();
 
   try {
-    // Переход на страницу
-    await page.goto(tonViewerUrl, {
-      waitUntil: "networkidle2", // Ждет, пока не завершатся все сетевые запросы
-      timeout: 90000, // Увеличение времени ожидания до 60 секунд
+    await page.goto(dedustUrl, {
+      waitUntil: "networkidle2",
+      timeout: 90000, // Увеличенное время ожидания
     });
 
-    // Ожидание элемента, содержащего все классы
+    // Ожидаем появления элементов на странице
+    await page.waitForSelector(".app-earn__content-table-cell-pool-name", {
+      visible: true,
+    });
+
+    // Извлекаем данные
+    const poolNames = await page.$$eval(
+      ".app-earn__content-table-cell-pool-name",
+      (elements) => elements.map((el) => el.innerText.trim())
+    );
+    const poolTexts = await page.$$eval(
+      ".app-earn__content-table-cell-text",
+      (elements) => elements.map((el) => el.innerText.trim())
+    );
+    const poolHref = await page.$$eval(
+      ".app-earn__content-table a",
+      (elements) => elements.map((el) => el.href)
+    );
+
+    return { poolNames, poolTexts, poolHref };
+  } catch (error) {
+    console.error("Ошибка при парсинге DeDust:", error);
+    return null;
+  } finally {
+    await browser.close(); // Закрываем браузер после завершения работы
+  }
+}
+
+// Функция для парсинга данных с сайта Tonview
+async function getElementData() {
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
+  const page = await browser.newPage();
+
+  try {
+    await page.goto(tonViewerUrl, {
+      waitUntil: "networkidle2",
+      timeout: 90000, // Увеличенное время ожидания
+    });
+
+    // Ожидание нужного элемента
     await page.waitForSelector(".bdtytpm.nygz236.t1g1t0q6.b1qs25iq.t1cmncij", {
       visible: true,
-      timeout: 60000,
     });
 
-    // Извлекаем текст элемента с указанными классами
     const elementData = await page.$eval(
       ".bdtytpm.nygz236.t1g1t0q6.b1qs25iq.t1cmncij",
       (el) => el.innerText.trim().replace(/,/g, "")
     );
 
-    // Закрываем браузер
-    await browser.close();
-
     return { elementData };
   } catch (error) {
-    console.error("Ошибка при парсинге:", error);
-    await browser.close();
+    console.error("Ошибка при парсинге Tonview:", error);
     return null;
+  } finally {
+    await browser.close(); // Закрываем браузер после завершения работы
   }
 }
 
@@ -115,7 +92,7 @@ app.get("/api/pool-info", async (req, res) => {
   if (data) {
     res.json(data);
   } else {
-    res.status(500).json({ error: "Не удалось получить данные." });
+    res.status(500).json({ error: "Не удалось получить данные с DeDust." });
   }
 });
 
@@ -124,7 +101,7 @@ app.get("/api/element-info", async (req, res) => {
   if (data) {
     res.json(data);
   } else {
-    res.status(500).json({ error: "Не удалось получить данные." });
+    res.status(500).json({ error: "Не удалось получить данные с Tonview." });
   }
 });
 
