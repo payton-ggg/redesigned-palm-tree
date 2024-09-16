@@ -13,28 +13,34 @@ const tonViewerUrl =
   "https://tonviewer.com/EQAWVv2x6txoc5Nel9CltbfYSBMOOf0R9sb7GnqY-4ncmjcQ";
 const browser = await puppeteer.launch({
   headless: true,
-  args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
-  timeout: 180000
+  args: [
+    "--no-sandbox",
+    "--disable-setuid-sandbox",
+    "--disable-dev-shm-usage",
+    "--disable-gpu",
+  ],
+  timeout: 180000,
 });
 
 // Парсинг данных с сайта DeDust
 async function getPoolData() {
-  const page = await browser.newPage();
+  const page = await browser.newPage({
+    waitUntil: "networkidle2", // Ждет, пока не завершатся все сетевые запросы
+    timeout: 90000, // Увеличение времени ожидания до 60 секунд
+  });
 
   try {
     // Переход на страницу DeDust
-    await page.goto(dedustUrl, {
-      waitUntil: 'networkidle2', // Ждет, пока не завершатся все сетевые запросы
-      timeout: 180000 // Увеличение времени ожидания до 60 секунд
-    });
-    console.log('Страница загружена');
+    await page.goto(dedustUrl);
+    console.log("Страница загружена");
 
-    await page.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3");
+    await page.setUserAgent(
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
+    );
 
     // Ожидаем появления нужных элементов
-    await page.waitForSelector(".app-earn__content-table-cell-pool-text", {
+    await page.waitForSelector(".app-earn__content-table-cell-pool-name", {
       visible: true,
-      timeout: 180000,
     });
 
     // Извлекаем текст из всех элементов с этим классом
@@ -68,29 +74,16 @@ async function getPoolData() {
 async function getElementData() {
   const browser = await puppeteer.launch({
     headless: true,
-    args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-    ],
-    timeout: 60000 // Увеличение времени ожидания
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    timeout: 60000, // Увеличение времени ожидания
   });
   const page = await browser.newPage();
-  await page.setRequestInterception(true);
-  page.on('request', (req) => {
-    const resourceType = req.resourceType();
-    if (['image', 'stylesheet', 'font'].includes(resourceType)) {
-      req.abort();
-    } else {
-      req.continue();
-    }
-  });
-
 
   try {
     // Переход на страницу
     await page.goto(tonViewerUrl, {
-      waitUntil: 'networkidle2', // Ждет, пока не завершатся все сетевые запросы
-      timeout: 90000 // Увеличение времени ожидания до 60 секунд
+      waitUntil: "networkidle2", // Ждет, пока не завершатся все сетевые запросы
+      timeout: 90000, // Увеличение времени ожидания до 60 секунд
     });
 
     // Ожидание элемента, содержащего все классы
@@ -137,5 +130,5 @@ app.get("/api/element-info", async (req, res) => {
 
 // Запуск сервера
 app.listen(port, () => {
-  console.log(`Сервер запущен на http://localhost:${port}/api/element-info`);
+  console.log(`Сервер запущен на http://localhost:${port}/api/pool-info`);
 });
