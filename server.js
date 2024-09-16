@@ -1,5 +1,5 @@
 import express from "express";
-import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-firefox";
 import cors from "cors";
 
 const app = express();
