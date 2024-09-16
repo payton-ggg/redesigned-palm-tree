@@ -6,7 +6,10 @@ const app = express();
 const port = 3001;
 
 // Разрешаем CORS для клиентской части
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000', // Разрешаем запросы с вашего фронтенда
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE'
+}));
 
 const dedustUrl = "https://app.dedust.io/pools?search=holy";
 const tonViewerUrl =
