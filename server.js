@@ -11,16 +11,14 @@ app.use(cors());
 const dedustUrl = "https://app.dedust.io/pools?search=holy";
 const tonViewerUrl =
   "https://tonviewer.com/EQAWVv2x6txoc5Nel9CltbfYSBMOOf0R9sb7GnqY-4ncmjcQ";
+const browser = await puppeteer.launch({
+  headless: true,
+  args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
+  timeout: 180000
+});
 
 // Парсинг данных с сайта DeDust
 async function getPoolData() {
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: [
-      "--no-sandbox",
-    ],
-    timeout: 180000 // Увеличение времени ожидания
-  });
   const page = await browser.newPage();
   await page.setRequestInterception(true);
   page.on('request', (req) => {
