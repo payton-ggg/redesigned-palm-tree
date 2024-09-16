@@ -12,7 +12,6 @@ const dedustUrl = "https://app.dedust.io/pools?search=holy";
 const tonViewerUrl =
   "https://tonviewer.com/EQAWVv2x6txoc5Nel9CltbfYSBMOOf0R9sb7GnqY-4ncmjcQ";
 const browser = await puppeteer.launch({
-  executablePath: "/opt/render/.cache/puppeteer/chrome/linux-128.0.6613.119/chrome-linux64/chrome",
   headless: true,
   args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
   timeout: 180000
