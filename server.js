@@ -22,7 +22,7 @@ async function getPoolData() {
   try {
     await page.goto(dedustUrl, {
       waitUntil: "networkidle2",
-      timeout: 90000, // Увеличенное время ожидания
+      timeout: 90000,
     });
 
     // Ожидаем появления элементов на странице
@@ -49,7 +49,7 @@ async function getPoolData() {
     console.error("Ошибка при парсинге DeDust:", error);
     return null;
   } finally {
-    await browser.close(); // Закрываем браузер после завершения работы
+    await browser.close();
   }
 }
 
@@ -64,7 +64,7 @@ async function getElementData() {
   try {
     await page.goto(tonViewerUrl, {
       waitUntil: "networkidle2",
-      timeout: 90000, // Увеличенное время ожидания
+      timeout: 90000,
     });
 
     // Ожидание нужного элемента
@@ -82,7 +82,7 @@ async function getElementData() {
     console.error("Ошибка при парсинге Tonview:", error);
     return null;
   } finally {
-    await browser.close(); // Закрываем браузер после завершения работы
+    await browser.close(); 
   }
 }
 
